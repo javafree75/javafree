@@ -32,3 +32,31 @@
             System.out.print(integer + " ");
         }
         System.out.println();
+
+
+
+
+	public static void main(String[] args){
+		Student[] student = new Student[3];
+		student[0]= new Student("1","김주연",1);
+		student[1]= new Student("2","나주연",2);
+		student[2]= new Student("3","하주연",3);			
+			
+		
+		Arrays.sort(student, new Comparator<Student>(){
+			public int compare (Student student1, Student student2){
+			
+				if (student1.getGrade() < student2.getGrade()) {
+			          return -1;
+			         } else if (student1.getGrade()  > student2.getGrade() ) {
+			          return 1;
+			         } else {
+			          return 0;
+			    }
+			}			
+		});
+		
+		for(Student studentx : student){
+			System.out.println(studentx.getGrade());
+		}		
+	}
