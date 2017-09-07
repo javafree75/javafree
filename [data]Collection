@@ -35,5 +35,8 @@ public class CollectionTest {
 			System.out.println(str);
 		}	
 	}
+	
+	List list = Collections.synchronizedList(new ArrayList<String>());
+	Map map = Collections.synchronizedMap(new HashMap());
 
 }
