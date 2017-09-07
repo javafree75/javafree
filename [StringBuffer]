@@ -4,6 +4,12 @@
             System.out.println( sb.append( "A" ) );   // ROMA
             System.out.println( sb.insert( 3, "R" ) );  // ROMRA 
             System.out.println( sb.reverse() );         // ARMOR  
+	    
+	    
+	    StringBuffer sb = new StringBuffer();
+	    sb.append(list[0].getName().substring(0, 7));
+	    sb.append(Integer.parseInt(list[0].getName().substring(7).replaceAll(".TXT", "")) + 1);
+	    sb.append(".TXT");
             
             
     String source = "100,200,300,400";
