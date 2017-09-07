@@ -1,0 +1,32 @@
+public class FileCopy {
+
+
+
+	public static void main(String[] args) {}
+		
+	public static void fileCopy(String orgin, String copy){
+		FileInputStream fis = null;
+		FileOutputStream fos = null;
+		try {
+			fis = new FileInputStream(orgin);
+			fos = new FileOutputStream(copy);
+			
+			int data = 0;
+
+			while ((data = fis.read()) != -1) {
+				fos.write(data);
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				fis.close();
+				fos.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+}
