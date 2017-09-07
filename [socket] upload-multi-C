@@ -1,0 +1,74 @@
+import java.net.*;
+import java.util.Date;
+import java.io.*;
+
+public class UploadClient {
+	
+    public static void main(String[] args) throws Exception {
+        Socket s = new Socket("127.0.0.1", 7777);
+        File file = new File("data");
+
+        File[] fileList = file.listFiles();
+        String filename = null;
+        
+        BufferedOutputStream toServer = null;
+        DataOutputStream dos = null;
+        
+        BufferedInputStream bis = null;
+        FileInputStream fis = null;
+        
+        DataInputStream dis = null;
+       
+        try { 
+        	// file 내부 byte 전송용
+            toServer = new BufferedOutputStream(s.getOutputStream());
+            // file정보 data 형식 전송용
+            dos = new DataOutputStream(s.getOutputStream());
+            
+            dis = new DataInputStream(s.getInputStream());
+            
+            // 0. 전송할 file개수 전송
+            dos.writeInt(fileList.length);
+        	dos.flush();
+        	
+            for (int i = 0; i < fileList.length; i++) {
+                File files = fileList[i];
+                System.out.println(files.getName());
+                filename = files.getPath();
+                
+                // 1. file명 전송
+                dos.writeUTF(filename);
+                String response = dis.readUTF();
+                System.out.println("response : "+ response);
+
+                fis = new FileInputStream(filename);
+                bis = new BufferedInputStream(fis);
+                
+                
+
+                // 2. 읽을 수 있는 byte의 수 전송                
+                dos.writeInt(bis.available());
+                
+                int ch = 0;
+                while ((ch = bis.read()) != -1) {
+                    toServer.write(ch);
+                }
+                toServer.flush();
+                new Thread().sleep(1000);
+                fis.close();
+
+            }
+
+        } catch (FileNotFoundException fnfe) {
+            fnfe.printStackTrace();
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        } finally{
+        	if (s != null) s.close();
+        	if (toServer != null) toServer.close();
+        	if (dos != null) dos.close();
+        	if (bis != null) bis.close();
+        	System.exit(0);
+        }
+    }
+}
