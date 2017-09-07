@@ -1,0 +1,39 @@
+public class CollectionTest {
+
+	public static void main(String[] args) {
+		//Stack (LIFO)
+		Stack<String> s = new Stack<String>();
+		s.push("사과");
+		s.push("오렌지");
+		s.push("바나나");
+		
+		while(! s.empty()){
+			System.out.println(s.pop());
+		}
+		
+		//Queue (FIFO구조)
+		Queue<String> q = new LinkedList<String>();
+		q.offer("카트라이더");
+		q.offer("워록");
+		q.offer("버블버블");
+		while(q.peek() != null){
+			System.out.println(q.poll());
+		}
+
+		// List
+		List<String> list1 = new LinkedList<String>();
+		list1.add("짜장면");
+		list1.add("짬봉");
+		list1.add("라조기");
+		for (String str:list1){
+			System.out.println(str);
+		}
+
+		List<String> list2= list1.subList(1, 2);
+		
+		for (String str:list2){
+			System.out.println(str);
+		}	
+	}
+
+}
