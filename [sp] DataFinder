@@ -61,3 +61,83 @@ public class DataFinder {
 		Util.write(filePath, result);
 	}
 }
+
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import lcp.Util;
+
+
+
+public class DataFinder {
+
+	private final Map<String, List<DataInfo>> dataInfosPerCode;			// Ctrl+Shift+O
+
+
+
+	public DataFinder() throws IOException {
+
+		dataInfosPerCode = new HashMap<>();
+		
+		File dataFolder = new File("data");
+		for (File dataFilex: dataFolder.listFiles()) {
+			FileReader     fileReader     = null;
+			BufferedReader bufferedReader = null;
+			try {
+				fileReader     = new FileReader(dataFilex.getAbsolutePath());
+				bufferedReader = new BufferedReader(fileReader);
+				String line;
+				int    lineNo = 0;
+				while ((line = bufferedReader.readLine()) != null) {
+					String code = line.substring(0, 6);
+					List<DataInfo> dataInfos = dataInfosPerCode.get(code);
+					if (dataInfos == null) {
+						dataInfos = new ArrayList<>();
+						dataInfosPerCode.put(code,  dataInfos);
+					}
+					dataInfos.add(new DataInfo(dataFilex.getName(), dataFilex.getAbsolutePath(), lineNo));
+					lineNo++;
+				}
+				
+			} finally {
+				if (bufferedReader != null) try { bufferedReader.close(); } catch (Exception ex) { /* Do Nothing */ }
+				if (fileReader != null) try { fileReader.close(); } catch (Exception ex) { /* Do Nothing */ }
+			}
+		}
+	}
+
+
+
+	public void find(String code, String filePath) throws IOException {
+
+		String result = "";
+
+		List<DataInfo> dataInfos = dataInfosPerCode.get(code);
+		if (dataInfos != null) {
+			for (DataInfo dataInfox: dataInfos) {
+				RandomAccessFile randomFile = null;
+				try {
+					randomFile = new RandomAccessFile(dataInfox.getFileAbsolutePath(), "r");  
+					randomFile.seek(dataInfox.getLineNo() * (6 + 1 + 300 + 1) + (6 + 1));
+					
+					byte[] dataBytes = new byte[300];
+					randomFile.readFully(dataBytes);
+					result = result + dataInfox.getFileName() + "#" + new String(dataBytes) + "\n";
+					
+				} finally {
+					if (randomFile != null) try { randomFile.close(); } catch (Exception ex) { /* Do Nothing */ }
+				}
+			}
+		}
+
+		Util.write(filePath, result);
+	}
+}
