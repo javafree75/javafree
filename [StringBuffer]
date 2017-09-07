@@ -1,0 +1,23 @@
+            StringBuffer sb = new StringBuffer( "ROM" );
+
+            System.out.println( sb );                     // ROM
+            System.out.println( sb.append( "A" ) );   // ROMA
+            System.out.println( sb.insert( 3, "R" ) );  // ROMRA 
+            System.out.println( sb.reverse() );         // ARMOR  
+            
+            
+    String source = "100,200,300,400";
+		StringTokenizer st = new StringTokenizer(source,",");
+		
+		while(st.hasMoreTokens())
+		{
+			System.out.println(st.nextToken());
+		}
+    
+    
+    String source = "100,200,300,400";
+        String[] tokens = source.split(",");
+        for(String token : tokens) {
+            System.out.println(token);
+        }
+    }
