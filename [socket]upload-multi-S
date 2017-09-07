@@ -1,0 +1,112 @@
+import java.net.*;
+
+//파일 끝까지 읽은걸 알기 위해서 -1 일때 까지 읽는건 맞는데
+//네트워크 상태에서 -1까지 읽는건 접속이 끊어질때까지 읽는다는 의미 입니다...
+//
+//현재 구조에선 클라이언트가 파일 하나 보내고 끊고 하나 보내고 끊고 하는 구조가 아니고 연속으로 여러개를 보내는 구조기 때문에 서버 입장에서는 하나의 stream으로 보고 처리하게 됩니다..
+//
+//몇몇 부분 수정해봤습니다.. 참고하세요..
+
+
+
+import java.io.*;
+public class UploadServer {
+    public static void main(String[] args) {
+    	ServerSocket ss = null;
+        try {
+            ss = new ServerSocket(7777);
+            System.out.println("Server ready..");
+            while (true) {
+                Socket s = ss.accept();
+                System.out.println("Success!");
+                System.out.println(s.getInetAddress());// IP address
+           	
+/*            	ExecutorService threadPool = Executors.newFixedThreadPool(
+            	        // CPU 코어의 수만큼 최대 스레드를 사용하는 스레드풀을 생성
+            	        Runtime.getRuntime().availableProcessors()
+            	);
+            	Future future = threadPool.submit(new ServerThread(s));
+                               
+            	Thread thread = (Thread)future.get();
+            	thread.start();*/
+                
+                ServerThread st = new ServerThread(s);
+            	st.start();
+            }
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+            
+        }catch (Exception e){
+        	e.printStackTrace();
+        }finally{
+        	try{
+        		if(ss != null) ss.close(); 
+        	}catch (Exception e){
+        		e.printStackTrace();
+        	}
+        	System.exit(0);
+        }
+    }
+}// end of class
+class ServerThread extends Thread {
+
+    Socket socket;
+    public ServerThread(Socket s) {
+        socket = s;
+    }
+    
+    public void run() {
+        try {
+        	
+            //while( true ) {
+                BufferedInputStream up = new BufferedInputStream(socket.getInputStream());
+                DataInputStream fromClient = new DataInputStream(up);
+                
+                DataOutputStream toClient = new DataOutputStream(socket.getOutputStream());
+                System.out.println("wait...");
+                
+                // 1. file의 개수 수신
+                int fileCount = fromClient.readInt();
+                
+                for (int i=0; i<fileCount; i++){
+                	//2. file명 수신
+                	String filename = fromClient.readUTF();
+                	System.out.println(filename + "\t received.");
+                	
+                	// file명 수신받았음을 noti
+                	toClient.writeUTF(filename);
+                	
+                	//3. 읽을 수 있는 byte 수 수신
+                	int len = fromClient.readInt();
+                	System.out.println(len + "\t received.");
+                	filename = filename.substring(5);
+                	
+                	FileOutputStream toFile = new FileOutputStream(filename);
+                	BufferedOutputStream outFile = new BufferedOutputStream(toFile);
+                	
+                	int ch = 0;
+		//            while ((ch = up.read()) != -1) {
+		//                outFile.write(ch);
+		//            }
+	                for (int j = 0; j < len; j++) {
+	                    outFile.write(up.read());
+	                }
+	                outFile.flush();
+	                outFile.close();       
+	                toFile.close();
+                }
+                up.close();
+                fromClient.close();
+                socket.close();           
+            
+      	
+        }catch (FileNotFoundException fnfe) {
+            fnfe.printStackTrace();
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
+        finally{
+        	System.exit(0);
+        }
+    }
+}
