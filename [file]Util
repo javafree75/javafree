@@ -1,0 +1,40 @@
+public class Util {
+
+	public static void write(String filePath, String content) throws IOException {
+
+		System.out.println("* " + filePath + " -> \n" + content + "\n");
+		
+		FileWriter     fileWriter     = null;
+		BufferedWriter bufferedWriter = null;
+		try {
+			fileWriter     = new FileWriter(filePath);
+			bufferedWriter = new BufferedWriter(fileWriter);
+			bufferedWriter.write(content);
+
+		} finally {
+			if (bufferedWriter != null) try { bufferedWriter.close(); } catch (Exception ex) { /* Do Nothing */ }
+			if (fileWriter     != null) try { fileWriter    .close(); } catch (Exception ex) { /* Do Nothing */ }
+		}
+	}
+
+	public static String read(String filePath) throws IOException {
+
+		StringBuilder  stringBuilder;
+		FileReader     fileReader     = null;
+		BufferedReader bufferedReader = null;
+		try {
+			stringBuilder  = new StringBuilder();
+			fileReader     = new FileReader(filePath);
+			bufferedReader = new BufferedReader(fileReader);
+			String line;
+			while ((line = bufferedReader.readLine()) != null)
+				stringBuilder.append(line).append('\n');
+			
+		} finally {
+			if (bufferedReader != null) try { bufferedReader.close(); } catch (Exception ex) { /* Do Nothing */ }
+			if (fileReader     != null) try { fileReader.close(); } catch (Exception ex) { /* Do Nothing */ }
+		}
+		
+		return stringBuilder.toString();
+	}
+}
