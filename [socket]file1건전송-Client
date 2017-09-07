@@ -1,0 +1,53 @@
+
+import java.net.*;
+import java.io.*;
+
+
+public class Client {
+
+	public static void main(String[] args) throws IOException, InterruptedException{
+		Socket s = new Socket("localhost", 1234);
+		
+		try{
+			OutputStream os = s.getOutputStream();
+			BufferedOutputStream bs = new BufferedOutputStream(os);
+			DataOutputStream dos = new DataOutputStream(os);
+			
+			File aFile = new File("data/score.txt");
+
+			FileInputStream fis = new FileInputStream(aFile);
+			BufferedInputStream bis = new BufferedInputStream(fis);
+			
+			// 1.파일명 전송
+			dos.writeUTF(aFile.getName());
+			
+			// 2.파일명 서버에서 응답받음 
+			BufferedInputStream bis2= new BufferedInputStream(s.getInputStream());
+			
+			byte[] b = new byte[256];
+			bis2.read(b);
+			String retData = new String(b, "UTF-8"); 
+		    System.out.println("form server filename : "+ retData);
+			
+		    int ch =0;
+		    byte[] byteData = new byte[12];
+		    bs.write(bis.available());
+		    
+		    while ((ch=bis.read(byteData)) != -1){
+		    	String retData1 = new String(byteData, "UTF-8"); 
+		    	bs.write(byteData);
+		    }
+		    System.out.println("file 전송완료");
+			bs.flush();
+			Thread.sleep(1000);
+			fis.close();
+			
+			
+		}catch (IOException ioe){
+			ioe.printStackTrace();
+		}finally{
+			if (s !=null) s.close();
+			System.exit(0);
+		}
+	}
+}
