@@ -1,0 +1,28 @@
+public class RandomAccessMain {
+
+	public static void main(String[] args) throws IOException {
+		// TODO Auto-generated method stub
+    	byte[] result = RandomAccessMain.readBytes("data/data.txt", 0, 10);
+	    String resultString =  new String(result, "UTF-8"); 
+		
+		
+	}
+
+	
+	public static byte[] readBytes(String filePath, int offset, int length) throws IOException {
+		 
+	    RandomAccessFile randomFile = null;
+	    try {
+	        randomFile = new RandomAccessFile(filePath, "r"); 
+	        randomFile.seek(offset);
+	         
+	        byte[] dataBytes = new byte[length];
+	        randomFile.readFully(dataBytes);
+	         
+	        return dataBytes;
+	         
+	    } finally {
+	        if (randomFile != null) try { randomFile.close(); } catch (Exception ex) { /* Do Nothing */ }
+	    }
+	}
+}
