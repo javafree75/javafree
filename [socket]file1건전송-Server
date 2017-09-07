@@ -1,0 +1,89 @@
+
+import java.io.*;
+import java.net.*;
+
+
+// file 1건 전송, byte
+public class Server {
+
+	public static void main(String[] args) throws Exception{
+		
+    	ServerSocket ss = null;
+        try {
+            ss = new ServerSocket(1234);
+            System.out.println("Server ready..");
+            while (true) {
+                Socket s = ss.accept();
+        		new FileReceveThread(s).start();
+             }
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+            
+        }catch (Exception e){
+        	e.printStackTrace();
+        }finally{
+        	try{
+        		if(ss != null) ss.close(); 
+        	}catch (Exception e){
+        		e.printStackTrace();
+        	}
+        	System.exit(0);
+	     }
+	}
+}
+
+class FileReceveThread extends Thread{
+	Socket s;
+	
+	public FileReceveThread(Socket socket){
+		this.s = socket;
+	}
+	
+	public void run(){
+		try {
+			InputStream is = s.getInputStream();
+			DataInputStream ds = new DataInputStream(is);
+			BufferedInputStream bis = new BufferedInputStream(is);
+			
+			//1. file명 송신
+			String fileName = ds.readUTF();
+			System.out.println("fileName="+fileName);
+			
+			//2. 송신받은 file명 client에 재 전달
+			OutputStream os = s.getOutputStream();
+			BufferedOutputStream bos1 = new BufferedOutputStream(os);
+			bos1.write(fileName.getBytes());
+			bos1.flush();
+			
+            //3. file 수신
+			FileOutputStream fis = new FileOutputStream(fileName);
+			BufferedOutputStream bos = new BufferedOutputStream(fis);
+	
+			//Client로부터 available한 길이 받아야함
+			int availableLength = bis.read();
+				for (int i=0; i<availableLength;i++){
+				bos.write(bis.read());
+			}
+			System.out.println("file 저장완료");
+			bos.flush();
+			bos.close();
+			
+			is.close();
+			ds.close();
+			bis.close();
+			os.close();
+			bos1.close();
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally{
+        	try{
+        		if(s != null) s.close(); 
+        	}catch (Exception e){
+        		e.printStackTrace();
+        	}
+        	System.exit(0);        	
+		}		
+	}	
+}
