@@ -1,0 +1,24 @@
+import java.io.File;
+import java.io.IOException;
+
+import lcp.Util;
+
+public class DataFinder {
+
+	public void find(String code, String filePath) throws IOException {
+		
+		String result = "";
+		
+		String prefix = code + "#";
+		File dataFolder = new File("data");
+		for (File dataFilex: dataFolder.listFiles()) {
+			String content = Util.read(dataFilex.getAbsolutePath());
+			String[] lines = content.split("\n");
+			for (String linex: lines)
+				if (linex.startsWith(prefix))
+					result = result + dataFilex.getName() + "#" + linex.substring(7) + "\n";
+		}
+		
+		Util.write(filePath, result);
+	}
+}
