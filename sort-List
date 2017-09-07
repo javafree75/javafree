@@ -1,0 +1,36 @@
+		ArrayList<String> al = new ArrayList<String>();
+		
+		al.add("하주연");
+		al.add("나주연");
+		al.add("김주연");
+		Collections.sort(al);
+		
+		for (String str : al){
+			System.out.println(str);
+		}
+			
+		List<Student> values = new ArrayList<Student> ();
+		values.add(new Student("kim","dd", 1));
+		values.add(new Student("kim","dd", 3));	
+		values.add(new Student("kim","dd", 2));	
+		
+		Collections.sort(values, new Comparator<Student>() {
+		    @Override
+		    public int compare(Student value0, Student value1) {
+		 
+		        // return value0.getString().compareTo(value1.getString());	 
+		 
+		         if (value0.getGrade() < value1.getGrade()) {
+		          return 1;
+		         } else if (value0.getGrade() > value1.getGrade()) {
+		          return -1;
+		         } else {
+		          return 0;
+		         }
+		    }
+		});
+		
+		for(Student studentx: values){
+			System.out.println(studentx.getGrade());
+		}
+	}
