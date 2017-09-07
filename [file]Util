@@ -37,4 +37,12 @@ public class Util {
 		
 		return stringBuilder.toString();
 	}
+	
+private static String[] parseLog() throws IOException {
+        Path filePath = new File( "data/access.log" ).toPath();
+        Charset charset = Charset.forName( "UTF-8" );
+
+        List<String> stringList = Files.readAllLines( filePath, charset );
+        return stringList.toArray( new String[] {} );
+    }
 }
