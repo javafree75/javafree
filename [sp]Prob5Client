@@ -1,0 +1,47 @@
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.net.UnknownHostException;
+
+
+
+public class Prob5Client {
+
+	public static void main(String[] args) throws UnknownHostException, IOException, InterruptedException {
+
+//		String code = "111111";
+		String code = "q";
+		
+		Socket             socket             = new Socket("127.0.0.1", 12345);
+		OutputStream       outputStream       = socket.getOutputStream();
+		OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream);
+		PrintWriter        printWriter        = new PrintWriter(outputStreamWriter);
+		
+		printWriter.print(code);
+		printWriter.flush();
+		System.out.println("Sent - " + code);
+		
+		InputStream       inputStream       = socket.getInputStream();
+		InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+		BufferedReader    bufferedReader    = new BufferedReader(inputStreamReader);
+
+		String received = bufferedReader.readLine();
+		System.out.println("Received - " + received);
+	
+		bufferedReader.close();
+		inputStreamReader.close();
+		inputStream.close();
+		printWriter.close();
+		outputStreamWriter.close();
+		outputStream.close();
+		socket.close();
+		
+		System.out.println("End.");
+	}
+}
