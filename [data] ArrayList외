@@ -1,0 +1,32 @@
+        ArrayList<Integer> list = new ArrayList<Integer>();
+        list.add( 100 );
+        list.add( 200 );
+        list.add( 300 );
+        list.add( 400 );
+
+        for ( int inx = 0; inx < list.size(); inx++ ) {
+            System.out.println( list.get( inx ) );
+        }
+
+        for ( int number : list ) {
+            System.out.println( number );
+        }
+        
+    HashMap<String, Integer> map = new HashMap<String, Integer>();
+
+		map.put("NUMBER1", 100);
+		map.put("NUMBER2", 200);
+		map.put("NUMBER3", 300);
+		System.out.println(map);
+
+		map.put("NUMBER2", 250);
+		System.out.println(map);
+
+		map.remove("NUMBER2");
+		System.out.println(map);
+		map.put("NUMBER4", 400);
+		System.out.println(map);
+
+		int number = map.get("NUMBER1");
+		System.out.println(number);
+		System.out.println(map.get("NUMBER3"));
