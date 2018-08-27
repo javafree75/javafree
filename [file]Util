@@ -1,5 +1,9 @@
 public class Util {
 
+//텍스트 파일 한 번에 모두 읽기 (Utility 타입)
+
+//(warning) 대용량 파일일 때는 메모리가 부족할 수 있으므로 '텍스트 파일 라인 단위로 읽어서 처리' 방식을 사용
+
 	public static void write(String filePath, String content) throws IOException {
 
 		System.out.println("* " + filePath + " -> \n" + content + "\n");
@@ -17,6 +21,11 @@ public class Util {
 		}
 	}
 
+
+
+
+
+//텍스트 파일 라인 단위로 읽어서 처리
 	public static String read(String filePath) throws IOException {
 
 		StringBuilder  stringBuilder;
@@ -28,7 +37,7 @@ public class Util {
 			bufferedReader = new BufferedReader(fileReader);
 			String line;
 			while ((line = bufferedReader.readLine()) != null)
-				stringBuilder.append(line).append('\n');
+				stringBuilder.append(line).append('\n'); [[line 값 처리]]
 			
 		} finally {
 			if (bufferedReader != null) try { bufferedReader.close(); } catch (Exception ex) { /* Do Nothing */ }
@@ -37,6 +46,22 @@ public class Util {
 		
 		return stringBuilder.toString();
 	}
+	
+//텍스트 파일 쓰기 (Utility 타입)
+
+public static void write(String filePath, String content) throws IOException {
+    FileWriter     fileWriter     = null;
+    BufferedWriter bufferedWriter = null;
+    try {
+        fileWriter     = new FileWriter(filePath);
+        bufferedWriter = new BufferedWriter(fileWriter);
+        bufferedWriter.write(content);
+    } finally {
+        if (bufferedWriter != null) try { bufferedWriter.close(); } catch (Exception ex) { /* Do Nothing */ }
+        if (fileWriter     != null) try { fileWriter    .close(); } catch (Exception ex) { /* Do Nothing */ }
+    }
+}
+
 	
 private static String[] parseLog() throws IOException {
         Path filePath = new File( "data/access.log" ).toPath();
