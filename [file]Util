@@ -71,3 +71,18 @@ private static String[] parseLog() throws IOException {
         return stringList.toArray( new String[] {} );
     }
 }
+
+
+//폴더 내 파일 리스트 처리
+
+File folder = new File([[폴더 경로]]);
+
+for (File filex: folder.listFiles()) {
+
+    String fileName     = filex.getName();
+
+    String absolutePath = filex.getAbsolutePath();
+
+    [[파일 처리]]
+
+}
